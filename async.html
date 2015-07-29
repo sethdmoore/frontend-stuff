@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>React Components</title>
+    <script src="http://fb.me/react-0.8.0.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.8.0.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+</head>
+<body>
+    <div id="content"></div>
+    <script type="text/jsx">
+    /*** @jsx React.DOM */
+
+    var WebPanel = React.createClass({
+        getInitialState: function() {
+            return {
+                foo: '',
+                bar: ''
+            };
+
+        },
+        componentDidMount: function() {
+            $.get(this.props.source, function(result) {
+                this.data = result
+            });
+        },
+        render:function() {
+            return (
+                <div>
+                <h1>this is the WebPanel</h1>
+                <MemberList data={this.state.data} />
+                </div>
+            )
+        }
+    });
+
+        /*
+        componentDidMount: function() {
+            $.get(this.props.source, function(result) {
+                this.setState(result)
+            })
+        },
+
+        render:function() {
+        }
+    });
+    */
+
+    var MemberList = React.createClass({
+        render:function() {
+            return (
+                <h1>{this.state.data}</h1>
+            )
+        }
+    });
+
+    React.renderComponent(<WebPanel source="http://home.development:5000/" />, document.getElementById("content"))
+    </script>
+</body>
+</html>

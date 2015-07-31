@@ -14,24 +14,24 @@
 
     var WebPanel = React.createClass({
         getInitialState: function() {
-            return {
-                foo: '',
-                bar: ''
-            };
-
+            return { data: null };
         },
         componentDidMount: function() {
-            $.get(this.props.source, function(result) {
-                this.data = result
-            });
+            $.get(this.props.source).done(function(data) {
+              this.setState({data: data})
+            }.bind(this));
         },
         render:function() {
-            return (
-                <div>
-                <h1>this is the WebPanel</h1>
-                <MemberList data={this.state.data} />
-                </div>
-            )
+            if (this.state.data) {
+                return (
+                    <div>
+                    <h1>this is the WebPanel</h1>
+                    <MemberList data={this.state.data} />
+                    </div>
+                )
+            } else {
+                return <div>Loading...</div>;
+            }
         }
     });
 
@@ -50,7 +50,7 @@
     var MemberList = React.createClass({
         render:function() {
             return (
-                <h1>{this.state.data}</h1>
+                <h1>{this.props.data}</h1>
             )
         }
     });

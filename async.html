@@ -14,6 +14,18 @@
     /*** @jsx React.DOM */
 
     var WebPanel = React.createClass({
+        handleClick: function(e) {
+            e.preventDefault();
+            console.log(this.props.source);
+            $.ajax({
+                    url: this.props.source,
+                    type: "PUT",
+            }).done(function(data) {
+                $.get(this.props.source).done(function(data) {
+                    this.setState({data: data});
+                }.bind(this));
+            }.bind(this));
+        },
         getInitialState: function() {
             return { data: null };
         },
@@ -28,6 +40,7 @@
                     <div>
                     <h1>this is the WebPanel</h1>
                     <MemberList data={this.state.data} />
+                    <TheButton handler={this.props.handleClick} />
                     </div>
                 )
             } else {
@@ -36,17 +49,16 @@
         }
     });
 
-        /*
-        componentDidMount: function() {
-            $.get(this.props.source, function(result) {
-                this.setState(result)
-            })
-        },
 
-        render:function() {
+    var TheButton = React.createClass({
+        render: function() {
+            return(
+                <div>
+                    <input type="button" onClick={this.props.handler} />
+                </div>
+            );
         }
     });
-    */
 
     var MemberRow = React.createClass({
         render: function() {
@@ -81,6 +93,7 @@
             );
         }
     });
+
 
     React.render(<WebPanel source="http://192.168.1.150:5000/" />, document.getElementById("content"))
     </script>

@@ -14,10 +14,12 @@ def index():
             {"name": ["bill", "morrison"],
              "occupations": ["burger tuner"]},
             {"name": ["candy", "carolsen"],
-             "occupations": ["developer", "chief clock watcher"]}
+             "occupations": ["developer", "chief clock watcher"]},
+            {"name": ["jeff", "jeffries"],
+             "occupations": ["spoon licker", "brown noser"]}
         ]
     # return json.dumps({["Bill", "Morrison"], ["Candy", "Carolsen"]})
     return jsonify({"members": mlist})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)

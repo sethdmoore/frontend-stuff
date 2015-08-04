@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>React Components</title>
-    <script src="http://fb.me/react-0.8.0.js"></script>
-    <script src="http://fb.me/JSXTransformer-0.8.0.js"></script>
+    <script src="http://fb.me/react-0.13.3.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.13.3.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script> -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 </head>
 <body>
@@ -47,15 +48,41 @@
     });
     */
 
-    var MemberList = React.createClass({
-        render:function() {
+    var MemberRow = React.createClass({
+        render: function() {
+            console.log(this);
+            var name = this.props.name;
+
             return (
-                <h1>{this.props.data}</h1>
-            )
+                <tr>
+                    <td>{this.props.name.slice(0,1)} {this.props.name.slice(-1)}</td>
+                    <td>{this.props.occupations.join(", ")}</td>
+                </tr>
+            );
         }
     });
 
-    React.renderComponent(<WebPanel source="http://home.development:5000/" />, document.getElementById("content"))
+    var MemberList = React.createClass({
+        render:function() {
+            var rows = [];
+            //console.log(this.props.data)
+            this.props.data.members.forEach(function(employee) {
+                console.log(employee);
+                rows.push(<MemberRow name={employee.name} occupations={employee.occupations} />);
+            });
+            return (
+                <table>
+                  <thead>
+                    <th>Name</th>
+                    <th>Occupations</th>
+                  </thead>
+                 <tbody>{rows}</tbody>
+                </table>
+            );
+        }
+    });
+
+    React.render(<WebPanel source="http://192.168.1.150:5000/" />, document.getElementById("content"))
     </script>
 </body>
 </html>

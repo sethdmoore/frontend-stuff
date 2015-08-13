@@ -14,9 +14,21 @@
     /*** @jsx React.DOM */
 
     var WebPanel = React.createClass({
-        handleClick: function(e) {
+        handleHire: function(e) {
             e.preventDefault();
-            console.log(this.props.source);
+            //console.log(this.props.source);
+            $.ajax({
+                    url: this.props.source + "hire",
+                    type: "PUT",
+            }).done(function(data) {
+                $.get(this.props.source).done(function(data) {
+                    this.setState({data: data});
+                }.bind(this));
+            }.bind(this));
+        },
+        handleFire: function(e) {
+            e.preventDefault();
+            //console.log(this.props.source);
             $.ajax({
                     url: this.props.source,
                     type: "PUT",
@@ -29,18 +41,23 @@
         getInitialState: function() {
             return { data: null };
         },
-        componentDidMount: function() {
+        fetchData: function() {
             $.get(this.props.source).done(function(data) {
               this.setState({data: data})
             }.bind(this));
+        },
+        componentDidMount: function() {
+            this.fetchData();
+            setInterval(this.fetchData, this.props.pollinterval);
         },
         render:function() {
             if (this.state.data) {
                 return (
                     <div>
                     <h1>this is the WebPanel</h1>
+                    <ActionButton type="fire" handler={this.handleFire} />
+                    <ActionButton type="hire" handler={this.handleHire} />
                     <MemberList data={this.state.data} />
-                    <TheButton handler={this.props.handleClick} />
                     </div>
                 )
             } else {
@@ -50,11 +67,11 @@
     });
 
 
-    var TheButton = React.createClass({
+    var ActionButton = React.createClass({
         render: function() {
             return(
                 <div>
-                    <input type="button" onClick={this.props.handler} />
+                    <input value={this.props.type} type="button" onClick={this.props.handler} />
                 </div>
             );
         }
@@ -62,7 +79,7 @@
 
     var MemberRow = React.createClass({
         render: function() {
-            console.log(this);
+            //console.log(this);
             var name = this.props.name;
 
             return (
@@ -78,9 +95,9 @@
         render:function() {
             var rows = [];
             //console.log(this.props.data)
-            this.props.data.members.forEach(function(employee) {
-                console.log(employee);
-                rows.push(<MemberRow name={employee.name} occupations={employee.occupations} />);
+            this.props.data.members.forEach(function(employee, index) {
+                //console.log(employee);
+                rows.push(<MemberRow key={index} name={employee.name} occupations={employee.occupations} />);
             });
             return (
                 <table>
@@ -95,7 +112,7 @@
     });
 
 
-    React.render(<WebPanel source="http://192.168.1.150:5000/" />, document.getElementById("content"))
+    React.render(<WebPanel source="http://192.168.1.150:5000/" pollinterval="2000" />, document.getElementById("content"))
     </script>
 </body>
 </html>

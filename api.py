@@ -9,14 +9,61 @@ app =  Flask("API")
 #cors = cross_origin(app, resources={r"/": {"origins": "*"}})
 cors = CORS(app)
 
+occupation_nouns = [
+    "paint",
+    "spoon",
+    "car",
+    "stage",
+    "chair",
+    "desk"
+]
+
+occupation_verbs = [
+    "taster",
+    "cooker",
+    "frier",
+    "dresser",
+    "dancer"
+]
+
+first_names = [
+    "bill",
+    "candy",
+    "jeff",
+    "clay",
+    "frank",
+    "sally",
+    "jane"
+]
+
+last_names = [
+    "billiams",
+    "nathans",
+    "ivans",
+    "timber",
+    "clueless"
+]
+
 mlist = [
         {"name": ["bill", "morrison"],
          "occupations": ["burger tuner"]},
         {"name": ["candy", "carolsen"],
          "occupations": ["developer", "chief clock watcher"]},
         {"name": ["jeff", "jeffries"],
+         "occupations": ["spoon licker", "brown noser"]},
+        {"name": ["jeff", "jeffries"],
          "occupations": ["spoon licker", "brown noser"]}
 ]
+
+@app.route("/hire", methods=['PUT'])
+@cross_origin()
+def hire():
+    rando = {"name": [random.choice(first_names), random.choice(last_names)],
+             "occupations": [" ".join((random.choice(occupation_nouns),
+                                       random.choice(occupation_verbs)))]}
+    mlist.append(rando)
+    return Response(status=200)
+
 
 @app.route("/", methods=['GET', 'PUT'])
 def index():
@@ -32,4 +79,4 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=True, threaded=True)
